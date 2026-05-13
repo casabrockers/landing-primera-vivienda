@@ -691,6 +691,11 @@
             <option value="cualquiera">Cualquier horario</option>
           </select>
         </div>
+        <!-- Honeypot anti-bot: invisible para humanos, los bots lo llenan automáticamente -->
+        <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true">
+          <label for="website">No llenar este campo</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
         <button class="btn-primary" type="submit" style="margin-top:8px">
           Enviar mis datos
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -713,6 +718,22 @@
         Escribirnos por WhatsApp
       </a>
       <p class="alt-link">Te contactaremos al número que dejaste.</p>
+    </div>
+  </section>
+
+  <!-- DUPLICATE (teléfono ya registrado) -->
+  <section class="screen" id="screen-duplicate">
+    <div class="final">
+      <div class="check" style="background:#FFF4E5;border-color:#D4A017">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:#A8800D"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <h2>Ya tenemos una solicitud tuya</h2>
+      <p>Detectamos que este teléfono ya está registrado en nuestro sistema. Un ejecutivo de Casa Brockers te contactará pronto. Si tienes consultas urgentes, escríbenos por WhatsApp.</p>
+      <a class="btn-whatsapp agenda-btn" id="waLinkDup" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.9-.4-1.7-.9-2.5-1.7-.7-.7-1.2-1.5-1.6-2.3-.2-.3 0-.4.2-.6.2-.1.3-.3.5-.5.1-.2.2-.3.3-.5.1-.2 0-.4-.1-.5-.1-.1-.6-1.5-.9-2.1-.2-.5-.5-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.3 0 1.3 1 2.6 1.1 2.8.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+        Escribirnos por WhatsApp
+      </a>
+      <button class="btn-ghost" onclick="restart()" style="margin-top:8px">Volver al inicio</button>
     </div>
   </section>
 </main>
@@ -960,7 +981,8 @@
     answers: {},
     score: 0,
     contact: {},
-    profile: null
+    profile: null,
+    startTime: 0  // timestamp en ms cuando el usuario comenzó el quiz (anti-bot)
   };
 
   // ===== HELPERS =====
@@ -1001,6 +1023,7 @@
   // ===== FLOW =====
   function start() {
     state.history = []; state.answers = {}; state.score = 0;
+    state.startTime = Date.now();  // anti-bot: marca cuándo arrancó
     state.current = getNextIndex(-1);
     renderQuestion();
   }
@@ -1127,6 +1150,48 @@
 
   function goToForm() { showScreen("screen-form"); }
 
+  // ===== ANTI-DUPLICADO =====
+  // Pregunta al webhook (GET) si este teléfono ya está registrado en la Sheet.
+  // Devuelve true si es duplicado, false si no, o false ante error (no bloquear envío por falla de red).
+  async function checkDuplicatePhone(telefono) {
+    if (!CONFIG.webhookUrl) return false;
+    try {
+      const url = CONFIG.webhookUrl + "?check=" + encodeURIComponent(telefono);
+      const res = await fetch(url, { method: "GET" });
+      if (!res.ok) return false;
+      const data = await res.json();
+      return !!(data && data.exists);
+    } catch (e) {
+      console.warn("Check duplicate error:", e);
+      return false;
+    }
+  }
+
+  // Normaliza el teléfono a formato comparable: +56912345678
+  function normalizePhone(tel) {
+    if (!tel) return "";
+    let clean = String(tel).replace(/[^0-9+]/g, "");
+    if (!clean.startsWith("+")) {
+      if (clean.startsWith("56")) clean = "+" + clean;
+      else if (clean.startsWith("9") && clean.length >= 9) clean = "+56" + clean;
+      else clean = "+56" + clean;
+    }
+    return clean;
+  }
+
+  // Detecta patrones obvios de spam: dígitos repetidos como 999999999 o 111111111
+  function isObviousSpamPhone(tel) {
+    const digits = String(tel).replace(/\D/g, "");
+    // Tomar últimos 8 dígitos (móvil chileno sin 9 inicial)
+    const last8 = digits.slice(-8);
+    if (last8.length < 8) return true;
+    // Si todos los dígitos son iguales (00000000, 11111111, etc.)
+    if (/^(\d)\1{7}$/.test(last8)) return true;
+    // Si es una secuencia ascendente o descendente perfecta
+    if (last8 === "12345678" || last8 === "87654321") return true;
+    return false;
+  }
+
   function restart() {
     state.history = []; state.current = -1; state.answers = {}; state.score = 0;
     showScreen("screen-hero");
@@ -1160,23 +1225,61 @@
   // ===== FORM COMPLETO (camino agenda) =====
   async function submitForm(ev) {
     ev.preventDefault();
+
+    // 1) Honeypot: si el campo oculto está lleno, es un bot. Silenciosamente fingimos éxito.
+    const honeypot = document.getElementById("website");
+    if (honeypot && honeypot.value && honeypot.value.length > 0) {
+      console.warn("Honeypot disparado. Bot detectado.");
+      showScreen("screen-final"); // pantalla fake para no alertar al bot
+      return;
+    }
+
+    // 2) Tiempo mínimo: si llenó el quiz + form en menos de 10 segundos, es bot
+    const elapsedMs = Date.now() - (state.startTime || 0);
+    if (state.startTime && elapsedMs < 10000) {
+      console.warn("Tiempo demasiado rápido:", elapsedMs, "ms");
+      showScreen("screen-final"); // pantalla fake
+      return;
+    }
+
+    const telefono = document.getElementById("telefono").value.trim();
+
+    // 3) Validación de patrones obvios de spam en el teléfono
+    if (isObviousSpamPhone(telefono)) {
+      alert("El número de teléfono ingresado no es válido. Por favor revísalo.");
+      return;
+    }
+
     const data = {
       origen: "form_completo",
       nombre: document.getElementById("nombre").value.trim(),
-      telefono: document.getElementById("telefono").value.trim(),
+      telefono: telefono,
       comuna: document.getElementById("comuna").value.trim(),
       horario: document.getElementById("horario").value,
       perfil: state.profile,
       score: state.score,
       respuestas: state.answers,
-      fecha: new Date().toISOString()
+      fecha: new Date().toISOString(),
+      tiempo_llenado_ms: elapsedMs
     };
     state.contact = data;
 
     // Deshabilitar botón mientras se envía
     const btn = ev.target.querySelector("button[type=submit]");
-    if (btn) { btn.disabled = true; btn.style.opacity = .7; }
+    if (btn) { btn.disabled = true; btn.style.opacity = .7; btn.innerHTML = "Verificando..."; }
 
+    // 4) Verificar si el teléfono ya está registrado ANTES de enviar
+    const isDuplicate = await checkDuplicatePhone(normalizePhone(telefono));
+    if (isDuplicate) {
+      // Mostrar pantalla de duplicado y NO enviar
+      const waMsgDup = `Hola Casa Brockers, soy ${data.nombre}. Mi teléfono ya estaba registrado pero quería conectarme con un ejecutivo.`;
+      document.getElementById("waLinkDup").href = buildWhatsappLink(waMsgDup);
+      showScreen("screen-duplicate");
+      if (btn) { btn.disabled = false; btn.style.opacity = 1; btn.innerHTML = "Enviar mis datos"; }
+      return;
+    }
+
+    // 5) No es duplicado, enviar normalmente
     await sendLead(data);
 
     const firstName = data.nombre.split(" ")[0];
