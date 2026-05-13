@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#FAF7EE" />
+<title>Casa Brockers — ¿Puedes comprar tu primera vivienda?</title>
+<meta name="description" content="Descubre en 60 segundos si calificas para comprar tu primera vivienda con subsidio, leasing habitacional o financiamiento." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet" />
+<link rel="icon" type="image/png" href="casabrockers-logo.png" />
+<style>
+  :root {
+    --bg: #FAF7EE;
+    --bg-2: #FFF9EC;
+    --paper: #FFFFFF;
+    --gold: #D4A017;
+    --gold-dark: #A8800D;
+    --gold-deep: #6B4F08;
+    --gold-light: #F4E4B8;
+    --gold-bg: #FDF6E0;
+    --black: #1A1A1A;
+    --text: #1F1F1F;
+    --muted: #7A6F5C;
+    --border: #E8DFC9;
+    --border-strong: #D9CCA8;
+    --radius: 18px;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --shadow-sm: 0 2px 8px rgba(107, 79, 8, 0.06);
+    --shadow-md: 0 12px 28px -12px rgba(107, 79, 8, 0.18);
+    --shadow-lg: 0 24px 48px -20px rgba(107, 79, 8, 0.25);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+  }
+  body {
+    min-height: 100dvh;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, rgba(212,160,23,0.10), transparent 60%),
+      radial-gradient(700px 400px at 100% 100%, rgba(212,160,23,0.05), transparent 60%),
+      var(--bg);
+  }
+  .app {
+    max-width: 460px;
+    margin: 0 auto;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 14px 18px env(safe-area-inset-bottom) 18px;
+    position: relative;
+  }
+  /* Top bar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 2px 14px;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .brand img {
+    width: 36px; height: 36px;
+    filter: drop-shadow(0 2px 4px rgba(107,79,8,0.15));
+  }
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-size: 15px;
+    color: var(--black);
+    line-height: 1;
+  }
+  .brand-sub {
+    font-size: 9px;
+    color: var(--gold-dark);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 3px;
+  }
+  .progress-wrap {
+    flex: 1;
+    height: 6px;
+    background: rgba(168, 128, 13, 0.10);
+    border-radius: 999px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity .4s var(--ease), transform .4s var(--ease);
+    margin-left: 4px;
+  }
+  .progress-wrap.show { opacity: 1; transform: translateY(0); }
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+    border-radius: 999px;
+    transition: width .6s var(--ease);
+    box-shadow: 0 0 10px rgba(212,160,23,0.35);
+  }
+
+  /* Screens */
+  .screen {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    animation: fadeIn .45s var(--ease);
+  }
+  .screen.active { display: flex; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 18px 6px 12px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .hero-logo {
+    width: 88px; height: 88px;
+    margin: 0 auto 18px;
+    filter: drop-shadow(0 8px 20px rgba(107,79,8,0.20));
+    animation: floatY 4s ease-in-out infinite;
+  }
+  @keyframes floatY {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--gold);
+    background: var(--gold-bg);
+    color: var(--gold-deep);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin: 0 auto 20px;
+  }
+  .badge::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold); box-shadow: 0 0 8px var(--gold);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .5; transform: scale(1.4); }
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(28px, 8vw, 38px);
+    line-height: 1.15;
+    margin: 0 0 14px;
+    letter-spacing: -0.5px;
+    color: var(--black);
+  }
+  h1 em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.55;
+    margin: 0 auto 26px;
+    max-width: 360px;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 26px;
+    color: var(--muted);
+    font-size: 12px;
+    flex-wrap: wrap;
+  }
+  .hero-meta span { display: inline-flex; align-items: center; gap: 6px; }
+  .hero-meta svg { width: 14px; height: 14px; color: var(--gold-dark); }
+
+  /* Buttons */
+  .btn-primary {
+    appearance: none; border: 0; cursor: pointer;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: #fff;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.3px;
+    padding: 17px 20px;
+    border-radius: 14px;
+    width: 100%;
+    transition: transform .15s var(--ease), box-shadow .25s var(--ease), filter .2s var(--ease);
+    box-shadow: 0 14px 28px -12px rgba(168,128,13,0.55), inset 0 1px 0 rgba(255,255,255,0.25);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary svg { width: 18px; height: 18px; }
+
+  .btn-whatsapp {
+    appearance: none; cursor: pointer;
+    background: #fff;
+    color: #128C7E;
+    border: 1.5px solid #128C7E;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 17px 20px;
+    border-radius: 14px;
+    width: 100%;
+    transition: all .2s var(--ease);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-whatsapp:hover { background: #128C7E; color: #fff; transform: translateY(-1px); }
+  .btn-whatsapp svg { width: 20px; height: 20px; }
+
+  .btn-ghost {
+    appearance: none; cursor: pointer;
+    background: transparent; color: var(--muted);
+    border: 0; padding: 14px;
+    font-size: 13px; font-family: inherit;
+    width: 100%;
+    transition: color .2s ease;
+  }
+  .btn-ghost:hover { color: var(--text); }
+
+  /* Question screen */
+  .question-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 4px 8px;
+  }
+  .q-illustration {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    animation: popIn .55s var(--ease);
+  }
+  .q-illustration svg {
+    width: 150px;
+    height: 150px;
+    max-width: 100%;
+    filter: drop-shadow(0 8px 20px rgba(107,79,8,0.12));
+  }
+  .question-num {
+    font-size: 11px;
+    color: var(--gold-dark);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .question-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(22px, 6.2vw, 28px);
+    line-height: 1.25;
+    margin: 0 0 8px;
+    letter-spacing: -0.3px;
+    text-align: center;
+    color: var(--black);
+  }
+  .question-sub {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0 0 22px;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    appearance: none; border: 1.5px solid var(--border);
+    background: var(--paper);
+    color: var(--text);
+    text-align: left;
+    padding: 16px 18px;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all .25s var(--ease);
+    position: relative;
+    overflow: hidden;
+    animation: slideUp .5s var(--ease) backwards;
+    box-shadow: var(--shadow-sm);
+  }
+  .option::before {
+    content: '';
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border-strong);
+    flex-shrink: 0;
+    transition: all .25s var(--ease);
+    background: #fff;
+  }
+  .option:hover {
+    border-color: var(--gold);
+    background: var(--gold-bg);
+    transform: translateX(2px);
+  }
+  .option:hover::before { border-color: var(--gold); }
+  .option.selected {
+    border-color: var(--gold);
+    background: var(--gold-bg);
+    box-shadow: 0 0 0 3px rgba(212,160,23,0.15);
+  }
+  .option.selected::before {
+    border-color: var(--gold);
+    background: var(--gold);
+    box-shadow: inset 0 0 0 4px var(--paper);
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes popIn {
+    0% { transform: scale(0.6); opacity: 0; }
+    60% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+  .option:nth-child(1) { animation-delay: .05s; }
+  .option:nth-child(2) { animation-delay: .12s; }
+  .option:nth-child(3) { animation-delay: .19s; }
+  .option:nth-child(4) { animation-delay: .26s; }
+  .option:nth-child(5) { animation-delay: .33s; }
+  .option:nth-child(6) { animation-delay: .40s; }
+
+  .question-nav {
+    display: flex; gap: 10px; margin-top: 18px;
+    padding-bottom: 8px;
+  }
+  .back-btn {
+    appearance: none; cursor: pointer;
+    background: var(--paper); color: var(--muted);
+    border: 1.5px solid var(--border);
+    width: 50px; height: 50px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s ease;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+  }
+  .back-btn:hover { color: var(--gold-dark); border-color: var(--gold); }
+  .back-btn svg { width: 18px; height: 18px; }
+
+  /* Result */
+  .result {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 12px 6px 8px;
+  }
+  .result-illustration {
+    width: 100%; height: 140px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    animation: popIn .6s var(--ease);
+  }
+  .result-illustration svg { width: 140px; height: 140px; filter: drop-shadow(0 10px 24px rgba(107,79,8,0.18)); }
+  .result-tag {
+    display: inline-block;
+    padding: 5px 14px;
+    background: var(--gold-bg);
+    border: 1px solid var(--gold);
+    color: var(--gold-deep);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0 auto 14px;
+  }
+  .result h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(24px, 6.5vw, 30px);
+    line-height: 1.2;
+    margin: 0 0 14px;
+    letter-spacing: -0.3px;
+    color: var(--black);
+  }
+  .result p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 auto 22px;
+    max-width: 380px;
+  }
+  .summary {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin: 0 0 22px;
+    text-align: left;
+    box-shadow: var(--shadow-sm);
+  }
+  .summary-title {
+    font-size: 11px;
+    color: var(--gold-dark);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .summary-item {
+    display: flex; justify-content: space-between; gap: 12px;
+    padding: 7px 0;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+  .summary-item:last-child { border-bottom: 0; }
+  .summary-item span:first-child { color: var(--muted); }
+  .summary-item span:last-child { color: var(--text); font-weight: 600; text-align: right; }
+
+  .cta-stack { display: flex; flex-direction: column; gap: 10px; }
+  .cta-divider {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--muted); font-size: 11px;
+    letter-spacing: 2px; text-transform: uppercase; font-weight: 600;
+    margin: 4px 0;
+  }
+  .cta-divider::before, .cta-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* Form */
+  .form-screen { padding: 6px 4px; }
+  .form-screen h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 1.2;
+    margin: 12px 0 8px;
+    color: var(--black);
+  }
+  .form-screen .lead {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0 0 24px;
+    line-height: 1.55;
+  }
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold-dark);
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .field input, .field select {
+    width: 100%;
+    background: var(--paper);
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212,160,23,0.15);
+  }
+  .field select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A8800D' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 42px;
+  }
+  .privacy {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 14px;
+    line-height: 1.5;
+  }
+
+  /* Final / agenda */
+  .final {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px 10px;
+  }
+  .check {
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: var(--gold-bg);
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 22px;
+    animation: popIn .6s var(--ease);
+    box-shadow: 0 12px 28px -8px rgba(168,128,13,0.35);
+  }
+  .check svg { width: 46px; height: 46px; color: var(--gold-dark); }
+  .final h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    margin: 0 0 12px;
+    line-height: 1.2;
+    color: var(--black);
+  }
+  .final p {
+    color: var(--muted);
+    max-width: 340px;
+    line-height: 1.55;
+    margin: 0 0 24px;
+  }
+  .agenda-btn { width: 100%; max-width: 360px; }
+  .alt-link {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .alt-link a { color: var(--gold-dark); text-decoration: none; font-weight: 600; }
+
+  /* Footer note */
+  .foot {
+    text-align: center;
+    font-size: 10px;
+    color: var(--muted);
+    padding: 16px 0 4px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+<main class="app" id="app">
+  <header class="topbar">
+    <div class="brand">
+      <img src="casabrockers-logo.png" alt="Casa Brockers" />
+      <div>
+        <div class="brand-name">Casa Brockers</div>
+        <div class="brand-sub">Primera Vivienda</div>
+      </div>
+    </div>
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="screen active" id="screen-hero">
+    <div class="hero">
+      <img src="casabrockers-logo.png" alt="" class="hero-logo" />
+      <div class="badge">Test gratis · 60 segundos</div>
+      <h1>Descubre si puedes comprar tu <em>primera vivienda</em></h1>
+      <p>Responde 7 preguntas simples y un ejecutivo de Casa Brockers revisará tu caso sin costo.</p>
+      <div class="hero-meta">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>1 minuto</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Confidencial</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7L9 18l-5-5"/></svg>Sin compromiso</span>
+      </div>
+      <button class="btn-primary" onclick="start()">
+        Comenzar test
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+      <div class="foot">Subsidio · Leasing habitacional · Financiamiento</div>
+    </div>
+  </section>
+
+  <!-- QUESTION TEMPLATE — rendered dynamically -->
+  <section class="screen" id="screen-question">
+    <div class="question-card">
+      <div class="q-illustration" id="qIllustration"></div>
+      <div class="question-num" id="qNum"></div>
+      <h2 class="question-title" id="qTitle"></h2>
+      <p class="question-sub" id="qSub"></p>
+      <div class="options" id="qOptions"></div>
+      <div class="question-nav">
+        <button class="back-btn" onclick="goBack()" aria-label="Volver">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="screen-result">
+    <div class="result">
+      <div class="result-illustration" id="resultIllustration"></div>
+      <div class="result-tag" id="resultTag"></div>
+      <h2 id="resultTitle"></h2>
+      <p id="resultText"></p>
+      <div class="summary">
+        <div class="summary-title">Resumen de tu evaluación</div>
+        <div id="summaryList"></div>
+      </div>
+      <div class="cta-stack">
+        <button class="btn-primary" onclick="goToForm()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Quiero que un ejecutivo me contacte
+        </button>
+      </div>
+      <button class="btn-ghost" onclick="restart()">Volver al inicio</button>
+    </div>
+  </section>
+
+  <!-- FORM -->
+  <section class="screen" id="screen-form">
+    <div class="form-screen">
+      <div class="result-tag">Último paso</div>
+      <h2>Déjanos tus datos</h2>
+      <p class="lead">Un ejecutivo de Casa Brockers te contactará para orientarte sin compromiso.</p>
+      <form id="contactForm" onsubmit="submitForm(event)">
+        <div class="field">
+          <label for="nombre">Nombre completo</label>
+          <input id="nombre" type="text" required placeholder="Ej: María Fernanda Soto" />
+        </div>
+        <div class="field">
+          <label for="telefono">Teléfono / WhatsApp <span style="color:#C53030">*</span></label>
+          <input id="telefono" type="tel" required inputmode="tel" autocomplete="tel"
+                 pattern="^(\+?56)?\s?9\s?\d{4}\s?\d{4}$"
+                 placeholder="+56 9 1234 5678"
+                 title="Ingresa tu número con formato +56 9 1234 5678"
+                 oninvalid="this.setCustomValidity('Por favor ingresa un teléfono válido. Ej: +56 9 1234 5678')"
+                 oninput="this.setCustomValidity('')" />
+          <p style="font-size:11px;color:var(--muted);margin:6px 0 0">Obligatorio. Es la forma en que te contactaremos.</p>
+        </div>
+        <div class="field">
+          <label for="comuna">Comuna o ciudad</label>
+          <input id="comuna" type="text" required placeholder="Ej: Maipú, Santiago" />
+        </div>
+        <div class="field">
+          <label for="horario">Horario preferido de contacto</label>
+          <select id="horario" required>
+            <option value="">Selecciona un horario</option>
+            <option value="manana">Mañana (9:00 – 12:00)</option>
+            <option value="tarde">Tarde (12:00 – 18:00)</option>
+            <option value="noche">Noche (18:00 – 21:00)</option>
+            <option value="cualquiera">Cualquier horario</option>
+          </select>
+        </div>
+        <button class="btn-primary" type="submit" style="margin-top:8px">
+          Enviar mis datos
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+        <p class="privacy">Al enviar aceptas ser contactado por Casa Brockers. Tus datos están protegidos y no serán compartidos.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- FINAL (confirmación) -->
+  <section class="screen" id="screen-final">
+    <div class="final">
+      <div class="check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 id="finalTitle">¡Listo, tenemos tus datos!</h2>
+      <p>Un ejecutivo de Casa Brockers te contactará dentro de las próximas horas en el horario que indicaste. Si prefieres, puedes escribirnos ahora mismo por WhatsApp.</p>
+      <a class="btn-whatsapp agenda-btn" id="waLink" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.9-.4-1.7-.9-2.5-1.7-.7-.7-1.2-1.5-1.6-2.3-.2-.3 0-.4.2-.6.2-.1.3-.3.5-.5.1-.2.2-.3.3-.5.1-.2 0-.4-.1-.5-.1-.1-.6-1.5-.9-2.1-.2-.5-.5-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.3 0 1.3 1 2.6 1.1 2.8.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+        Escribirnos por WhatsApp
+      </a>
+      <p class="alt-link">Te contactaremos al número que dejaste.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+  // ===== CONFIG =====
+  // Editar estas variables con tus datos reales antes de publicar.
+  const CONFIG = {
+    whatsappNumber: "56944105478", // número Casa Brockers
+    // URL del Google Apps Script que recibe el lead y lo envía a Vambe + Sheets.
+    // Se obtiene al publicar el Apps Script como "Aplicación web" (Implementar → Cualquier persona).
+    webhookUrl: "https://script.google.com/macros/s/AKfycbyu1DrAV3yO99zYLwwk8BmF03A01uzjG9TpDjtdzAici8FQsOpvNjRYdraNzK0UrpsHaA/exec"
+  };
+
+  // ===== SVG ILLUSTRATIONS =====
+  // Paleta: dorado #D4A017 / negro #1A1A1A / crema #FDF6E0
+  const ILL = {
+    dicom: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D4A017"/><stop offset="1" stop-color="#A8800D"/></linearGradient></defs>
+      <circle cx="100" cy="100" r="86" fill="#FDF6E0"/>
+      <circle cx="100" cy="100" r="86" fill="none" stroke="#D4A017" stroke-width="2" stroke-dasharray="2 6" opacity=".6"/>
+      <path d="M100 40 L150 60 V110 C150 140 125 158 100 168 C75 158 50 140 50 110 V60 Z" fill="url(#g1)"/>
+      <path d="M100 50 L140 66 V108 C140 132 120 148 100 156 C80 148 60 132 60 108 V66 Z" fill="#1A1A1A"/>
+      <path d="M82 102 L94 114 L120 88" stroke="#D4A017" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+    dicom_monto: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D4A017"/><stop offset="1" stop-color="#A8800D"/></linearGradient></defs>
+      <circle cx="100" cy="100" r="86" fill="#FDF6E0"/>
+      <rect x="44" y="78" width="112" height="62" rx="8" fill="#1A1A1A"/>
+      <rect x="52" y="86" width="112" height="62" rx="8" fill="url(#g2)" transform="rotate(-4 108 117)"/>
+      <circle cx="108" cy="117" r="14" fill="#FDF6E0"/>
+      <text x="108" y="123" font-family="Inter, sans-serif" font-size="16" font-weight="800" text-anchor="middle" fill="#A8800D">$</text>
+      <rect x="60" y="100" width="20" height="3" rx="1.5" fill="#FDF6E0" opacity=".5" transform="rotate(-4 70 101.5)"/>
+      <rect x="140" y="130" width="20" height="3" rx="1.5" fill="#FDF6E0" opacity=".5" transform="rotate(-4 150 131.5)"/>
+    </svg>`,
+    antiguedad: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D4A017"/><stop offset="1" stop-color="#A8800D"/></linearGradient></defs>
+      <circle cx="100" cy="100" r="86" fill="#FDF6E0"/>
+      <rect x="50" y="88" width="100" height="74" rx="8" fill="#1A1A1A"/>
+      <rect x="80" y="68" width="40" height="22" rx="4" fill="none" stroke="#1A1A1A" stroke-width="6"/>
+      <rect x="50" y="106" width="100" height="6" fill="url(#g3)"/>
+      <circle cx="100" cy="109" r="9" fill="url(#g3)"/>
+      <circle cx="100" cy="109" r="3" fill="#1A1A1A"/>
+    </svg>`,
+    afp: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D4A017"/><stop offset="1" stop-color="#A8800D"/></linearGradient></defs>
+      <circle cx="100" cy="100" r="86" fill="#FDF6E0"/>
+      <rect x="48" y="120" width="20" height="36" rx="3" fill="#1A1A1A"/>
+      <rect x="76" y="100" width="20" height="56" rx="3" fill="#1A1A1A"/>
+      <rect x="104" y="80" width="20" height="76" rx="3" fill="url(#g4)"/>
+      <rect x="132" y="60" width="20" height="96" rx="3" fill="url(#g4)"/>
+      <path d="M52 90 L86 70 L114 80 L150 50" stroke="#A8800D" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <circle cx="150" cy="50" r="6" fill="#D4A017"/>
+    </svg>`,
+    renta: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g5" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D4A017"/><stop offset="1" stop-color="#A8800D"/></linearGradient></defs>
+      <circle cx="100" cy="100" r="86" fill="#FDF6E0"/>
+      <rect x="40" y="80" width="120" height="68" rx="10" fill="url(#g5)"/>
+      <rect x="48" y="88" width="120" height="68" rx="10" fill="#1A1A1A" opacity=".15"/>
+      <rect x="40" y="80" width="120" height="68" rx="10" fill="url(#g5)"/>
+      <circle cx="100" cy="114" r="20" fill="#FDF6E0"/>
+      <text x="100" y="122" font-family="Playfair Display, serif" font-size="24" font-weight="800" text-anchor="middle" fill="#A8800D">$</text>
+      <circle cx="56" cy="96" r="4" fill="#FDF6E0" opacity=".6"/>
+      <circle cx="144" cy="132" r="4" fill="#FDF6E0" opacity=".6"/>
+    </svg>`,
+    primera: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g6" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D4A017"/><stop offset="1" stop-color="#A8800D"/></linearGradient></defs>
+      <circle cx="100" cy="100" r="86" fill="#FDF6E0"/>
+      <path d="M60 110 L100 70 L140 110 V150 H60 Z" fill="#1A1A1A"/>
+      <rect x="88" y="120" width="24" height="30" fill="url(#g6)"/>
+      <path d="M55 112 L100 66 L145 112" stroke="url(#g6)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="135" cy="55" r="14" fill="none" stroke="url(#g6)" stroke-width="5"/>
+      <rect x="146" y="60" width="22" height="5" rx="2" fill="url(#g6)"/>
+      <rect x="158" y="63" width="4" height="6" fill="url(#g6)"/>
+    </svg>`,
+    objetivo: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g7" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D4A017"/><stop offset="1" stop-color="#A8800D"/></linearGradient></defs>
+      <circle cx="100" cy="100" r="86" fill="#FDF6E0"/>
+      <path d="M40 130 L70 100 L100 130 V160 H40 Z" fill="#1A1A1A"/>
+      <rect x="60" y="138" width="14" height="22" fill="url(#g7)"/>
+      <rect x="110" y="80" width="50" height="80" fill="url(#g7)"/>
+      <rect x="118" y="92" width="8" height="8" fill="#1A1A1A"/>
+      <rect x="134" y="92" width="8" height="8" fill="#1A1A1A"/>
+      <rect x="146" y="92" width="8" height="8" fill="#1A1A1A"/>
+      <rect x="118" y="108" width="8" height="8" fill="#1A1A1A"/>
+      <rect x="134" y="108" width="8" height="8" fill="#1A1A1A"/>
+      <rect x="146" y="108" width="8" height="8" fill="#1A1A1A"/>
+      <rect x="118" y="124" width="8" height="8" fill="#1A1A1A"/>
+      <rect x="134" y="124" width="8" height="8" fill="#1A1A1A"/>
+      <rect x="146" y="124" width="8" height="8" fill="#1A1A1A"/>
+      <rect x="128" y="140" width="14" height="20" fill="#1A1A1A"/>
+    </svg>`,
+    tiempo: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g8" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D4A017"/><stop offset="1" stop-color="#A8800D"/></linearGradient></defs>
+      <circle cx="100" cy="100" r="86" fill="#FDF6E0"/>
+      <rect x="50" y="58" width="100" height="92" rx="10" fill="#1A1A1A"/>
+      <rect x="50" y="58" width="100" height="22" rx="10" fill="url(#g8)"/>
+      <rect x="65" y="50" width="6" height="20" rx="3" fill="#1A1A1A"/>
+      <rect x="129" y="50" width="6" height="20" rx="3" fill="#1A1A1A"/>
+      <g fill="#FDF6E0">
+        <rect x="62" y="92" width="14" height="10" rx="2"/>
+        <rect x="84" y="92" width="14" height="10" rx="2"/>
+        <rect x="106" y="92" width="14" height="10" rx="2"/>
+        <rect x="128" y="92" width="14" height="10" rx="2"/>
+        <rect x="62" y="110" width="14" height="10" rx="2"/>
+        <rect x="106" y="110" width="14" height="10" rx="2"/>
+        <rect x="128" y="110" width="14" height="10" rx="2"/>
+        <rect x="62" y="128" width="14" height="10" rx="2"/>
+        <rect x="106" y="128" width="14" height="10" rx="2"/>
+      </g>
+      <rect x="80" y="106" width="22" height="18" rx="3" fill="#D4A017"/>
+      <path d="M85 115 L91 121 L99 110" stroke="#1A1A1A" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+    // Resultados
+    res_alto: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="ra" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D4A017"/><stop offset="1" stop-color="#A8800D"/></linearGradient></defs>
+      <circle cx="100" cy="100" r="86" fill="#FDF6E0"/>
+      <path d="M100 30 L122 80 L176 86 L136 122 L148 176 L100 150 L52 176 L64 122 L24 86 L78 80 Z" fill="url(#ra)"/>
+      <path d="M76 100 L92 116 L126 82" stroke="#1A1A1A" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+    res_medio: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="rb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D4A017"/><stop offset="1" stop-color="#A8800D"/></linearGradient></defs>
+      <circle cx="100" cy="100" r="86" fill="#FDF6E0"/>
+      <circle cx="100" cy="100" r="60" fill="url(#rb)"/>
+      <circle cx="100" cy="100" r="44" fill="#1A1A1A"/>
+      <circle cx="100" cy="100" r="14" fill="url(#rb)"/>
+      <line x1="100" y1="100" x2="100" y2="68" stroke="#FDF6E0" stroke-width="4" stroke-linecap="round"/>
+      <line x1="100" y1="100" x2="124" y2="116" stroke="#FDF6E0" stroke-width="4" stroke-linecap="round"/>
+    </svg>`,
+    res_bajo: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="rc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D4A017"/><stop offset="1" stop-color="#A8800D"/></linearGradient></defs>
+      <circle cx="100" cy="100" r="86" fill="#FDF6E0"/>
+      <path d="M50 70 L150 70 Q160 70 160 80 L160 130 Q160 140 150 140 L120 140 L100 160 L100 140 L50 140 Q40 140 40 130 L40 80 Q40 70 50 70 Z" fill="url(#rc)"/>
+      <circle cx="78" cy="105" r="5" fill="#1A1A1A"/>
+      <circle cx="100" cy="105" r="5" fill="#1A1A1A"/>
+      <circle cx="122" cy="105" r="5" fill="#1A1A1A"/>
+    </svg>`
+  };
+
+  // ===== QUIZ DATA =====
+  const QUESTIONS = [
+    {
+      id: "dicom",
+      illustration: "dicom",
+      title: "¿Tienes DICOM actualmente?",
+      sub: "Cuéntanos si tienes deuda morosa informada.",
+      options: [
+        { label: "No, no estoy en DICOM", value: "no", score: 2 },
+        { label: "Sí, estoy en DICOM", value: "si", score: 0 },
+        { label: "No estoy segura/o", value: "duda", score: 1 }
+      ]
+    },
+    {
+      id: "dicom_monto",
+      illustration: "dicom_monto",
+      title: "¿Cuál es el monto aproximado de la deuda?",
+      sub: "Esta información nos ayuda a evaluar alternativas.",
+      conditional: (a) => a.dicom === "si" || a.dicom === "duda",
+      options: [
+        { label: "Entre $0 y $50.000", value: "0-50", score: 2 },
+        { label: "Entre $50.001 y $200.000", value: "50-200", score: 1 },
+        { label: "Entre $200.001 y $500.000", value: "200-500", score: 1 },
+        { label: "Entre $500.001 y $1.000.000", value: "500-1M", score: 0 },
+        { label: "Más de $1.000.000", value: "1M+", score: 0 },
+        { label: "No lo sé con exactitud", value: "duda", score: 1 }
+      ]
+    },
+    {
+      id: "antiguedad",
+      illustration: "antiguedad",
+      title: "¿Tienes más de 6 meses en tu empleo actual?",
+      sub: "La antigüedad laboral es clave para tu evaluación.",
+      options: [
+        { label: "Sí, tengo más de 6 meses", value: "si", score: 2 },
+        { label: "No, tengo menos de 6 meses", value: "no", score: 0 },
+        { label: "Estoy independiente", value: "indep", score: 1 },
+        { label: "Actualmente no estoy trabajando", value: "sin_empleo", score: 0 }
+      ]
+    },
+    {
+      id: "afp",
+      illustration: "afp",
+      title: "¿Tienes 12 cotizaciones continuas en tu AFP?",
+      sub: "Es uno de los requisitos para varios programas.",
+      options: [
+        { label: "Sí, tengo 12 cotizaciones continuas", value: "si", score: 2 },
+        { label: "No, me falta completar cotizaciones", value: "no", score: 0 },
+        { label: "No estoy segura/o", value: "duda", score: 1 },
+        { label: "Soy independiente y cotizo de otra forma", value: "indep", score: 1 }
+      ]
+    },
+    {
+      id: "renta",
+      illustration: "renta",
+      title: "¿Tu renta líquida es igual o mayor a $550.000?",
+      sub: "Indícanos tu situación de ingresos actual.",
+      options: [
+        { label: "Sí, gano $550.000 o más", value: "si", score: 2 },
+        { label: "No, gano menos de $550.000", value: "no", score: 0 },
+        { label: "Puedo complementar renta con otra persona", value: "complementa", score: 2 },
+        { label: "No estoy segura/o si mi renta sirve", value: "duda", score: 1 }
+      ]
+    },
+    {
+      id: "primera",
+      illustration: "primera",
+      title: "¿Esta sería tu primera vivienda?",
+      sub: "Existen beneficios especiales para primera vivienda.",
+      options: [
+        { label: "Sí, sería mi primera vivienda", value: "si", score: 2 },
+        { label: "No, ya tengo o tuve una propiedad", value: "no", score: 0 },
+        { label: "No estoy segura/o", value: "duda", score: 1 }
+      ]
+    },
+    {
+      id: "objetivo",
+      illustration: "objetivo",
+      title: "¿Qué estás buscando comprar?",
+      sub: "Esto nos ayuda a encontrar la opción correcta para ti.",
+      options: [
+        { label: "Casa", value: "casa", score: 1 },
+        { label: "Departamento", value: "depto", score: 1 },
+        { label: "Casa o depto, según presupuesto", value: "flexible", score: 1 },
+        { label: "Aún no sé, quiero orientación", value: "orientacion", score: 1 }
+      ]
+    },
+    {
+      id: "tiempo",
+      illustration: "tiempo",
+      title: "¿Cuándo te gustaría iniciar la compra?",
+      sub: "Última pregunta. ¡Ya casi listo!",
+      options: [
+        { label: "Lo antes posible", value: "ya", score: 2 },
+        { label: "En 1 a 3 meses", value: "1-3", score: 2 },
+        { label: "En 3 a 6 meses", value: "3-6", score: 1 },
+        { label: "Solo estoy averiguando", value: "averiguando", score: 1 }
+      ]
+    }
+  ];
+
+  // ===== STATE =====
+  const state = {
+    history: [],
+    current: -1,
+    answers: {},
+    score: 0,
+    contact: {},
+    profile: null
+  };
+
+  // ===== HELPERS =====
+  function getNextIndex(from) {
+    for (let i = from + 1; i < QUESTIONS.length; i++) {
+      const q = QUESTIONS[i];
+      if (!q.conditional || q.conditional(state.answers)) return i;
+    }
+    return -1;
+  }
+  function countableQuestions() {
+    return QUESTIONS.filter(q => !q.conditional || q.conditional(state.answers));
+  }
+  function updateProgress() {
+    const wrap = document.getElementById("progressWrap");
+    const bar = document.getElementById("progressBar");
+    if (state.current < 0) { wrap.classList.remove("show"); return; }
+    wrap.classList.add("show");
+    const visible = countableQuestions();
+    const visIdx = visible.findIndex(q => q.id === QUESTIONS[state.current].id);
+    const pct = ((visIdx + 1) / visible.length) * 100;
+    bar.style.width = pct + "%";
+  }
+  function showScreen(id) {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    const el = document.getElementById(id);
+    el.classList.add("active");
+    el.style.animation = "none";
+    void el.offsetWidth;
+    el.style.animation = "";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  function buildWhatsappLink(extraContext) {
+    const baseMsg = extraContext || "Hola Casa Brockers, acabo de hacer el test de primera vivienda y me gustaría hablar con un ejecutivo.";
+    return `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(baseMsg)}`;
+  }
+
+  // ===== FLOW =====
+  function start() {
+    state.history = []; state.answers = {}; state.score = 0;
+    state.current = getNextIndex(-1);
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    if (state.current < 0) { showResult(); return; }
+    const q = QUESTIONS[state.current];
+    const visible = countableQuestions();
+    const visIdx = visible.findIndex(x => x.id === q.id);
+    document.getElementById("qIllustration").innerHTML = ILL[q.illustration] || "";
+    document.getElementById("qNum").textContent = `Pregunta ${visIdx + 1} de ${visible.length}`;
+    document.getElementById("qTitle").textContent = q.title;
+    document.getElementById("qSub").textContent = q.sub || "";
+    const opts = document.getElementById("qOptions");
+    opts.innerHTML = "";
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement("button");
+      btn.className = "option";
+      btn.style.animationDelay = (0.05 + i * 0.06) + "s";
+      btn.innerHTML = `<span>${opt.label}</span>`;
+      btn.onclick = (ev) => selectOption(opt, ev);
+      opts.appendChild(btn);
+    });
+    showScreen("screen-question");
+    updateProgress();
+  }
+
+  function selectOption(opt, ev) {
+    const q = QUESTIONS[state.current];
+    document.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
+    ev.currentTarget.classList.add("selected");
+    state.answers[q.id] = opt.value;
+    state.score += opt.score;
+    state.history.push(state.current);
+    setTimeout(() => {
+      const next = getNextIndex(state.current);
+      if (next === -1) showResult();
+      else { state.current = next; renderQuestion(); }
+    }, 280);
+  }
+
+  function goBack() {
+    if (state.history.length === 0) {
+      showScreen("screen-hero");
+      document.getElementById("progressWrap").classList.remove("show");
+      state.current = -1;
+      return;
+    }
+    const prev = state.history.pop();
+    const prevQ = QUESTIONS[prev];
+    const prevAnswer = state.answers[prevQ.id];
+    const prevOpt = prevQ.options.find(o => o.value === prevAnswer);
+    if (prevOpt) state.score -= prevOpt.score;
+    delete state.answers[prevQ.id];
+    state.current = prev;
+    renderQuestion();
+  }
+
+  // ===== RESULT =====
+  function classifyProfile() {
+    const answered = countableQuestions();
+    const maxScore = answered.reduce((acc, q) => acc + Math.max(...q.options.map(o => o.score)), 0);
+    const pct = state.score / maxScore;
+    if (pct >= 0.75) return "alto";
+    if (pct >= 0.45) return "medio";
+    return "bajo";
+  }
+
+  const RESULTS = {
+    alto: {
+      tag: "Perfil con buena posibilidad",
+      title: "Tu perfil tiene buena base para evaluación",
+      text: "Según tus respuestas, cumples con varios de los criterios principales. Un ejecutivo de Casa Brockers puede revisar tu caso y mostrarte las alternativas concretas: subsidio, leasing habitacional o financiamiento.",
+      ill: "res_alto"
+    },
+    medio: {
+      tag: "Tu perfil requiere revisión",
+      title: "Podemos revisar tu caso en detalle",
+      text: "Algunas de tus respuestas necesitan más información para una evaluación precisa. Un ejecutivo puede orientarte sobre qué alternativa se ajusta mejor a tu situación actual.",
+      ill: "res_medio"
+    },
+    bajo: {
+      tag: "Necesitamos más información",
+      title: "Tu perfil podría ser evaluado",
+      text: "Hay varios puntos que conviene revisar contigo personalmente. No te preocupes: muchos clientes empiezan en una situación similar. Un ejecutivo puede orientarte sin compromiso sobre los siguientes pasos.",
+      ill: "res_bajo"
+    }
+  };
+
+  function showResult() {
+    const profile = classifyProfile();
+    state.profile = profile;
+    const r = RESULTS[profile];
+    document.getElementById("resultTag").textContent = r.tag;
+    document.getElementById("resultTitle").textContent = r.title;
+    document.getElementById("resultText").textContent = r.text;
+    document.getElementById("resultIllustration").innerHTML = ILL[r.ill] || "";
+
+    // Summary
+    const labels = {
+      dicom: "DICOM",
+      dicom_monto: "Monto deuda",
+      antiguedad: "Antigüedad laboral",
+      afp: "Cotizaciones AFP",
+      renta: "Renta mensual",
+      primera: "Primera vivienda",
+      objetivo: "Busca",
+      tiempo: "Plazo de compra"
+    };
+    const sum = document.getElementById("summaryList");
+    sum.innerHTML = "";
+    Object.keys(state.answers).forEach(qid => {
+      const q = QUESTIONS.find(x => x.id === qid);
+      const opt = q.options.find(o => o.value === state.answers[qid]);
+      const row = document.createElement("div");
+      row.className = "summary-item";
+      row.innerHTML = `<span>${labels[qid] || qid}</span><span>${opt.label}</span>`;
+      sum.appendChild(row);
+    });
+
+    showScreen("screen-result");
+    document.getElementById("progressWrap").classList.remove("show");
+  }
+
+  function goToForm() { showScreen("screen-form"); }
+
+  function restart() {
+    state.history = []; state.current = -1; state.answers = {}; state.score = 0;
+    showScreen("screen-hero");
+    document.getElementById("progressWrap").classList.remove("show");
+  }
+
+  // ===== ENVÍO CENTRAL DEL LEAD =====
+  // Envía el lead al webhook (Google Apps Script → Sheets + Vambe).
+  // Si el webhook no está configurado, solo registra en consola para no romper el flujo.
+  async function sendLead(data) {
+    if (!CONFIG.webhookUrl) {
+      console.log("LEAD CAPTURADO (sin webhook configurado):", data);
+      return { ok: true, demo: true };
+    }
+    try {
+      // 'no-cors' permite enviar a Apps Script sin bloquear por CORS.
+      // El Apps Script igualmente recibe el body completo.
+      await fetch(CONFIG.webhookUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(data)
+      });
+      return { ok: true };
+    } catch (e) {
+      console.warn("Webhook error:", e);
+      return { ok: false, error: e.message };
+    }
+  }
+
+  // ===== FORM COMPLETO (camino agenda) =====
+  async function submitForm(ev) {
+    ev.preventDefault();
+    const data = {
+      origen: "form_completo",
+      nombre: document.getElementById("nombre").value.trim(),
+      telefono: document.getElementById("telefono").value.trim(),
+      comuna: document.getElementById("comuna").value.trim(),
+      horario: document.getElementById("horario").value,
+      perfil: state.profile,
+      score: state.score,
+      respuestas: state.answers,
+      fecha: new Date().toISOString()
+    };
+    state.contact = data;
+
+    // Deshabilitar botón mientras se envía
+    const btn = ev.target.querySelector("button[type=submit]");
+    if (btn) { btn.disabled = true; btn.style.opacity = .7; }
+
+    await sendLead(data);
+
+    const firstName = data.nombre.split(" ")[0];
+    document.getElementById("finalTitle").textContent = `¡Gracias, ${firstName}!`;
+
+    const waMsg = `Hola Casa Brockers, soy ${data.nombre}. Acabo de hacer el test de primera vivienda (perfil: ${state.profile}). Mi comuna es ${data.comuna} y prefiero contacto en horario: ${data.horario}.`;
+    document.getElementById("waLink").href = buildWhatsappLink(waMsg);
+
+    showScreen("screen-final");
+  }
+
+</script>
+</body>
+</html>
