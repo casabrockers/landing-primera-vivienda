@@ -575,6 +575,42 @@
     font-weight: 600;
   }
 
+  /* Spinner para botón submit */
+  .btn-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Botón secundario sutil para volver al sitio */
+  .btn-outline {
+    appearance: none; cursor: pointer;
+    background: transparent;
+    color: var(--gold-dark);
+    border: 1.5px solid var(--gold-border);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 13px 20px;
+    border-radius: 14px;
+    width: 100%;
+    transition: all .2s var(--ease);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .btn-outline:hover { background: var(--gold-bg); }
+
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -647,9 +683,14 @@
         <div id="summaryList"></div>
       </div>
       <div class="cta-stack">
-        <button class="btn-primary" onclick="goToForm()">
+        <button class="btn-primary" onclick="goToForm('ejecutivo')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           Quiero que un ejecutivo me contacte
+        </button>
+        <div class="cta-divider">o</div>
+        <button class="btn-primary" onclick="goToForm('oficina')" style="background:linear-gradient(135deg,#1A1A1A,#444);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
+          Quiero ir a la oficina
         </button>
       </div>
       <button class="btn-ghost" onclick="restart()">Volver al inicio</button>
@@ -715,7 +756,11 @@
       <p>Un ejecutivo de Casa Brockers te contactará dentro de las próximas horas en el horario que indicaste. Si prefieres, puedes escribirnos ahora mismo por WhatsApp.</p>
       <a class="btn-whatsapp agenda-btn" id="waLink" href="#" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.9-.4-1.7-.9-2.5-1.7-.7-.7-1.2-1.5-1.6-2.3-.2-.3 0-.4.2-.6.2-.1.3-.3.5-.5.1-.2.2-.3.3-.5.1-.2 0-.4-.1-.5-.1-.1-.6-1.5-.9-2.1-.2-.5-.5-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.3 0 1.3 1 2.6 1.1 2.8.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
-        Escribirnos por WhatsApp
+        Escribir ahora por WhatsApp
+      </a>
+      <a class="btn-outline" href="https://casabrockers.cl" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Cerrar y volver al sitio
       </a>
       <p class="alt-link">Te contactaremos al número que dejaste.</p>
     </div>
@@ -731,9 +776,12 @@
       <p>Detectamos que este teléfono ya está registrado en nuestro sistema. Un ejecutivo de Casa Brockers te contactará pronto. Si tienes consultas urgentes, escríbenos por WhatsApp.</p>
       <a class="btn-whatsapp agenda-btn" id="waLinkDup" href="#" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.9-.4-1.7-.9-2.5-1.7-.7-.7-1.2-1.5-1.6-2.3-.2-.3 0-.4.2-.6.2-.1.3-.3.5-.5.1-.2.2-.3.3-.5.1-.2 0-.4-.1-.5-.1-.1-.6-1.5-.9-2.1-.2-.5-.5-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.3 0 1.3 1 2.6 1.1 2.8.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
-        Escribirnos por WhatsApp
+        Escribir ahora por WhatsApp
       </a>
-      <button class="btn-ghost" onclick="restart()" style="margin-top:8px">Volver al inicio</button>
+      <a class="btn-outline" href="https://casabrockers.cl" target="_blank" rel="noopener" style="margin-top:8px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Cerrar y volver al sitio
+      </a>
     </div>
   </section>
 </main>
@@ -751,6 +799,14 @@
   // ===== SVG ILLUSTRATIONS =====
   // Paleta: dorado #D4A017 / negro #1A1A1A / crema #FDF6E0
   const ILL = {
+    edad: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="ge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D4A017"/><stop offset="1" stop-color="#A8800D"/></linearGradient></defs>
+      <circle cx="100" cy="100" r="86" fill="#FDF6E0"/>
+      <circle cx="78" cy="78" r="18" fill="#1A1A1A"/>
+      <path d="M52 158 c0-26 12-44 26-44 s26 18 26 44 v6 H52 Z" fill="#1A1A1A"/>
+      <circle cx="130" cy="88" r="14" fill="url(#ge)"/>
+      <path d="M108 158 c0-22 10-36 22-36 s22 14 22 36 v6 H108 Z" fill="url(#ge)"/>
+    </svg>`,
     dicom: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
       <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D4A017"/><stop offset="1" stop-color="#A8800D"/></linearGradient></defs>
       <circle cx="100" cy="100" r="86" fill="#FDF6E0"/>
@@ -876,6 +932,18 @@
   // ===== QUIZ DATA =====
   const QUESTIONS = [
     {
+      id: "edad",
+      illustration: "edad",
+      title: "¿En qué rango de edad estás?",
+      sub: "Esta información nos ayuda a personalizar las alternativas.",
+      options: [
+        { label: "18 a 25 años", value: "18-25", score: 1 },
+        { label: "26 a 40 años", value: "26-40", score: 2 },
+        { label: "41 a 57 años", value: "41-57", score: 1 },
+        { label: "Más de 58 años", value: "58+", score: 1 }
+      ]
+    },
+    {
       id: "dicom",
       illustration: "dicom",
       title: "¿Tienes DICOM actualmente?",
@@ -982,7 +1050,8 @@
     score: 0,
     contact: {},
     profile: null,
-    startTime: 0  // timestamp en ms cuando el usuario comenzó el quiz (anti-bot)
+    startTime: 0,  // timestamp en ms cuando el usuario comenzó el quiz (anti-bot)
+    formOrigen: "form_ejecutivo"  // 'form_ejecutivo' o 'form_oficina' según botón elegido en resultado
   };
 
   // ===== HELPERS =====
@@ -1148,7 +1217,11 @@
     document.getElementById("progressWrap").classList.remove("show");
   }
 
-  function goToForm() { showScreen("screen-form"); }
+  function goToForm(tipo) {
+    // tipo: 'ejecutivo' (default) o 'oficina'
+    state.formOrigen = tipo === "oficina" ? "form_oficina" : "form_ejecutivo";
+    showScreen("screen-form");
+  }
 
   // ===== ANTI-DUPLICADO =====
   // Pregunta al webhook (GET) si este teléfono ya está registrado en la Sheet.
@@ -1251,7 +1324,7 @@
     }
 
     const data = {
-      origen: "form_completo",
+      origen: state.formOrigen || "form_ejecutivo",  // 'form_ejecutivo' o 'form_oficina'
       nombre: document.getElementById("nombre").value.trim(),
       telefono: telefono,
       comuna: document.getElementById("comuna").value.trim(),
@@ -1264,9 +1337,13 @@
     };
     state.contact = data;
 
-    // Deshabilitar botón mientras se envía
+    // Deshabilitar botón y mostrar animación con spinner
     const btn = ev.target.querySelector("button[type=submit]");
-    if (btn) { btn.disabled = true; btn.style.opacity = .7; btn.innerHTML = "Verificando..."; }
+    if (btn) {
+      btn.disabled = true;
+      btn.style.opacity = .85;
+      btn.innerHTML = '<span class="btn-spinner"></span> Verificando tus datos...';
+    }
 
     // 4) Verificar si el teléfono ya está registrado ANTES de enviar
     const isDuplicate = await checkDuplicatePhone(normalizePhone(telefono));
@@ -1278,6 +1355,9 @@
       if (btn) { btn.disabled = false; btn.style.opacity = 1; btn.innerHTML = "Enviar mis datos"; }
       return;
     }
+
+    // Cambiar texto a "Enviando..."
+    if (btn) btn.innerHTML = '<span class="btn-spinner"></span> Enviando...';
 
     // 5) No es duplicado, enviar normalmente
     await sendLead(data);
