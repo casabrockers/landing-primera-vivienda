@@ -701,8 +701,8 @@
   <section class="screen" id="screen-form">
     <div class="form-screen">
       <div class="result-tag">Último paso</div>
-      <h2>Déjanos tus datos</h2>
-      <p class="lead">Un ejecutivo de Casa Brockers te contactará para orientarte sin compromiso.</p>
+      <h2 id="formTitle">Déjanos tus datos</h2>
+      <p class="lead" id="formLead">Un ejecutivo de Casa Brockers te contactará para orientarte sin compromiso.</p>
       <form id="contactForm" onsubmit="submitForm(event)">
         <div class="field">
           <label for="nombre">Nombre completo</label>
@@ -732,6 +732,18 @@
             <option value="cualquiera">Cualquier horario</option>
           </select>
         </div>
+        <!-- Campo extra: período de visita (solo flujo "Quiero ir a la oficina") -->
+        <div class="field" id="visitaField" style="display:none">
+          <label for="visita">¿Cuándo te gustaría visitarnos?</label>
+          <select id="visita">
+            <option value="">Selecciona cuándo te acomoda</option>
+            <option value="asap">Lo antes posible</option>
+            <option value="esta_semana">Esta semana (días hábiles)</option>
+            <option value="sabado">Este sábado</option>
+            <option value="proxima_semana">La próxima semana</option>
+            <option value="flexible">Soy flexible, coordinemos</option>
+          </select>
+        </div>
         <!-- Honeypot anti-bot: invisible para humanos, los bots lo llenan automáticamente -->
         <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true">
           <label for="website">No llenar este campo</label>
@@ -758,9 +770,9 @@
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.9-.4-1.7-.9-2.5-1.7-.7-.7-1.2-1.5-1.6-2.3-.2-.3 0-.4.2-.6.2-.1.3-.3.5-.5.1-.2.2-.3.3-.5.1-.2 0-.4-.1-.5-.1-.1-.6-1.5-.9-2.1-.2-.5-.5-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.3 0 1.3 1 2.6 1.1 2.8.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
         Escribir ahora por WhatsApp
       </a>
-      <a class="btn-outline" href="https://casabrockers.cl" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        Cerrar y volver al sitio
+      <a class="btn-whatsapp agenda-btn" href="https://casabrockers.cl" target="_blank" rel="noopener" style="background:#1f2937;border-color:#1f2937">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Cerrar y finalizar evaluación
       </a>
       <p class="alt-link">Te contactaremos al número que dejaste.</p>
     </div>
@@ -778,9 +790,9 @@
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.9-.4-1.7-.9-2.5-1.7-.7-.7-1.2-1.5-1.6-2.3-.2-.3 0-.4.2-.6.2-.1.3-.3.5-.5.1-.2.2-.3.3-.5.1-.2 0-.4-.1-.5-.1-.1-.6-1.5-.9-2.1-.2-.5-.5-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.3 0 1.3 1 2.6 1.1 2.8.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
         Escribir ahora por WhatsApp
       </a>
-      <a class="btn-outline" href="https://casabrockers.cl" target="_blank" rel="noopener" style="margin-top:8px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        Cerrar y volver al sitio
+      <a class="btn-whatsapp agenda-btn" href="https://casabrockers.cl" target="_blank" rel="noopener" style="margin-top:8px;background:#1f2937;border-color:#1f2937">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Cerrar y finalizar evaluación
       </a>
     </div>
   </section>
@@ -1219,7 +1231,33 @@
 
   function goToForm(tipo) {
     // tipo: 'ejecutivo' (default) o 'oficina'
-    state.formOrigen = tipo === "oficina" ? "form_oficina" : "form_ejecutivo";
+    const isOficina = tipo === "oficina";
+    state.formOrigen = isOficina ? "form_oficina" : "form_ejecutivo";
+
+    // Personalizar copy del header del formulario según el flujo
+    const titleEl = document.getElementById("formTitle");
+    const leadEl = document.getElementById("formLead");
+    if (titleEl) titleEl.textContent = "Déjanos tus datos";
+    if (leadEl) {
+      leadEl.textContent = isOficina
+        ? "Un ejecutivo de Casa Brockers te contactará para darte la dirección y agendar una cita para que puedas visitarnos."
+        : "Un ejecutivo de Casa Brockers te contactará para orientarte sin compromiso.";
+    }
+
+    // Mostrar / ocultar el campo de período de visita
+    const visitaField = document.getElementById("visitaField");
+    const visitaSel = document.getElementById("visita");
+    if (visitaField && visitaSel) {
+      if (isOficina) {
+        visitaField.style.display = "";
+        visitaSel.required = true;
+      } else {
+        visitaField.style.display = "none";
+        visitaSel.required = false;
+        visitaSel.value = "";
+      }
+    }
+
     showScreen("screen-form");
   }
 
@@ -1329,6 +1367,7 @@
       telefono: telefono,
       comuna: document.getElementById("comuna").value.trim(),
       horario: document.getElementById("horario").value,
+      visita: (document.getElementById("visita") && document.getElementById("visita").value) || "",
       perfil: state.profile,
       score: state.score,
       respuestas: state.answers,
@@ -1365,7 +1404,20 @@
     const firstName = data.nombre.split(" ")[0];
     document.getElementById("finalTitle").textContent = `¡Gracias, ${firstName}!`;
 
-    const waMsg = `Hola Casa Brockers, soy ${data.nombre}. Acabo de hacer el test de primera vivienda (perfil: ${state.profile}). Mi comuna es ${data.comuna} y prefiero contacto en horario: ${data.horario}.`;
+    const visitaLabels = {
+      asap: "lo antes posible",
+      esta_semana: "esta semana",
+      sabado: "este sábado",
+      proxima_semana: "la próxima semana",
+      flexible: "soy flexible, coordinemos"
+    };
+    let waMsg;
+    if (data.origen === "form_oficina") {
+      const visitaTxt = visitaLabels[data.visita] || "cuando me coordinen";
+      waMsg = `Hola Casa Brockers, soy ${data.nombre}. Acabo de hacer el test de primera vivienda (perfil: ${state.profile}) y quiero ir a la oficina para conocerlos. Me gustaría visitarlos ${visitaTxt}. Mi comuna es ${data.comuna}.`;
+    } else {
+      waMsg = `Hola Casa Brockers, soy ${data.nombre}. Acabo de hacer el test de primera vivienda (perfil: ${state.profile}). Mi comuna es ${data.comuna} y prefiero contacto en horario: ${data.horario}.`;
+    }
     document.getElementById("waLink").href = buildWhatsappLink(waMsg);
 
     showScreen("screen-final");
