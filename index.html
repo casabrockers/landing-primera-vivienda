@@ -1190,7 +1190,8 @@
   async function submitLead(ev) {
     ev.preventDefault();
 
-    // 1) Honeypot: si el campo oculto está lleno, es un bot
+    // 1) Honeypot: si el campo oculto está lleno, es un bot (los humanos no lo ven).
+    // Esto sí lo bloqueamos porque solo los bots automáticos llenan campos invisibles.
     const honeypot = document.getElementById("website");
     if (honeypot && honeypot.value && honeypot.value.length > 0) {
       console.warn("Honeypot disparado. Bot detectado.");
@@ -1198,21 +1199,13 @@
       return;
     }
 
-    // 2) Tiempo mínimo (anti-bot por velocidad)
     const elapsedMs = Date.now() - (state.startTime || 0);
-    if (state.startTime && elapsedMs < 8000) {
-      console.warn("Tiempo demasiado rápido:", elapsedMs, "ms");
-      mostrarFinal("medio", state.contact.nombre || "amigo/a"); // pantalla fake
-      return;
-    }
-
     const telefono = document.getElementById("telefono").value.trim();
 
-    // 3) Patrones obvios de spam en el teléfono
-    if (isObviousSpamPhone(telefono)) {
-      alert("El número de teléfono ingresado no es válido. Por favor revísalo.");
-      return;
-    }
+    // 2) Heurísticas de sospecha (NO bloquean envío — solo marcan la fila en la Sheet).
+    // Queremos que TODOS los registros queden auditados, aunque sean rápidos o raros.
+    const flagTiempoRapido = state.startTime && elapsedMs < 8000;
+    const flagPhoneSospechoso = isObviousSpamPhone(telefono);
 
     const data = {
       origen: "landing_tiktok",
@@ -1222,7 +1215,12 @@
       score: state.score,
       respuestas: state.answers,
       fecha: new Date().toISOString(),
-      tiempo_llenado_ms: elapsedMs
+      tiempo_llenado_ms: elapsedMs,
+      flag_sospechoso: !!(flagTiempoRapido || flagPhoneSospechoso),
+      motivo_sospecha: [
+        flagTiempoRapido ? "tiempo_rapido(" + elapsedMs + "ms)" : null,
+        flagPhoneSospechoso ? "telefono_patron" : null
+      ].filter(Boolean).join(",")
     };
     state.contact = Object.assign({}, state.contact, data);
 
