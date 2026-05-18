@@ -672,77 +672,44 @@
   </section>
 
   <!-- RESULT -->
-  <section class="screen" id="screen-result">
-    <div class="result">
-      <div class="result-illustration" id="resultIllustration"></div>
-      <div class="result-tag" id="resultTag"></div>
-      <h2 id="resultTitle"></h2>
-      <p id="resultText"></p>
-      <div class="summary">
-        <div class="summary-title">Resumen de tu evaluación</div>
-        <div id="summaryList"></div>
-      </div>
-      <div class="cta-stack">
-        <button class="btn-primary" onclick="goToForm('ejecutivo')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          Quiero que un ejecutivo me contacte
+  <!-- CAPTURA NOMBRE — sigue como una pregunta más del quiz -->
+  <section class="screen" id="screen-name">
+    <div class="form-screen">
+      <div class="result-tag" id="nameTag">¡Casi listo! 🎯</div>
+      <h2 id="nameTitle">¿Cómo te llamas?</h2>
+      <p class="lead" id="nameLead">Queremos personalizar tu evaluación. Cuéntanos tu nombre.</p>
+      <form id="nameForm" onsubmit="submitName(event)">
+        <div class="field">
+          <label for="nombre">Tu nombre</label>
+          <input id="nombre" type="text" required autocomplete="given-name"
+                 placeholder="Ej: María Fernanda"
+                 oninvalid="this.setCustomValidity('Por favor ingresa tu nombre')"
+                 oninput="this.setCustomValidity('')" />
+        </div>
+        <button class="btn-primary" type="submit" style="margin-top:8px">
+          Continuar
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </button>
-        <div class="cta-divider">o</div>
-        <button class="btn-primary" onclick="goToForm('oficina')" style="background:linear-gradient(135deg,#1A1A1A,#444);">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
-          Quiero ir a la oficina
-        </button>
-      </div>
-      <button class="btn-ghost" onclick="restart()">Volver al inicio</button>
+      </form>
     </div>
   </section>
 
-  <!-- FORM -->
-  <section class="screen" id="screen-form">
+  <!-- CAPTURA TELÉFONO — la última pregunta, dispara el envío -->
+  <section class="screen" id="screen-phone">
     <div class="form-screen">
-      <div class="result-tag">Último paso</div>
-      <h2 id="formTitle">Déjanos tus datos</h2>
-      <p class="lead" id="formLead">Un ejecutivo de Casa Brockers te contactará para orientarte sin compromiso.</p>
-      <form id="contactForm" onsubmit="submitForm(event)">
+      <div class="result-tag" id="phoneTag">Último paso 🚀</div>
+      <h2 id="phoneTitle">Para terminar, ¿a qué número te contactamos?</h2>
+      <p class="lead" id="phoneLead">Un asesor de Casa Brockers te escribirá por WhatsApp con tus alternativas reales.</p>
+      <form id="phoneForm" onsubmit="submitLead(event)">
         <div class="field">
-          <label for="nombre">Nombre completo</label>
-          <input id="nombre" type="text" required placeholder="Ej: María Fernanda Soto" />
-        </div>
-        <div class="field">
-          <label for="telefono">Teléfono / WhatsApp <span style="color:#C53030">*</span></label>
+          <label for="telefono">Tu WhatsApp <span style="color:#C53030">*</span></label>
           <input id="telefono" type="tel" required inputmode="tel" autocomplete="tel"
                  pattern="^(\+?56)?\s?9\s?\d{4}\s?\d{4}$"
                  placeholder="+56 9 1234 5678"
                  title="Ingresa tu número con formato +56 9 1234 5678"
                  oninvalid="this.setCustomValidity('Por favor ingresa un teléfono válido. Ej: +56 9 1234 5678')"
                  oninput="this.setCustomValidity('')" />
-          <p style="font-size:11px;color:var(--muted);margin:6px 0 0">Obligatorio. Es la forma en que te contactaremos.</p>
-        </div>
-        <div class="field">
-          <label for="comuna">Comuna o ciudad</label>
-          <input id="comuna" type="text" required placeholder="Ej: Maipú, Santiago" />
-        </div>
-        <div class="field">
-          <label for="horario">Horario preferido de contacto</label>
-          <select id="horario" required>
-            <option value="">Selecciona un horario</option>
-            <option value="manana">Mañana (9:00 – 12:00)</option>
-            <option value="tarde">Tarde (12:00 – 18:00)</option>
-            <option value="noche">Noche (18:00 – 21:00)</option>
-            <option value="cualquiera">Cualquier horario</option>
-          </select>
-        </div>
-        <!-- Campo extra: período de visita (solo flujo "Quiero ir a la oficina") -->
-        <div class="field" id="visitaField" style="display:none">
-          <label for="visita">¿Cuándo te gustaría visitarnos?</label>
-          <select id="visita">
-            <option value="">Selecciona cuándo te acomoda</option>
-            <option value="asap">Lo antes posible</option>
-            <option value="esta_semana">Esta semana (días hábiles)</option>
-            <option value="sabado">Este sábado</option>
-            <option value="proxima_semana">La próxima semana</option>
-            <option value="flexible">Soy flexible, coordinemos</option>
-          </select>
+          <p style="font-size:11px;color:var(--muted);margin:6px 0 0">Solo lo usamos para contactarte por WhatsApp. No te enviaremos spam.</p>
         </div>
         <!-- Honeypot anti-bot: invisible para humanos, los bots lo llenan automáticamente -->
         <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden" aria-hidden="true">
@@ -750,47 +717,28 @@
           <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
         </div>
         <button class="btn-primary" type="submit" style="margin-top:8px">
-          Enviar mis datos
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          Finalizar evaluación
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         </button>
-        <p class="privacy">Al enviar aceptas ser contactado por Casa Brockers. Tus datos están protegidos y no serán compartidos.</p>
+        <p class="privacy">Al enviar aceptas ser contactado por Casa Brockers. Tus datos están protegidos.</p>
       </form>
     </div>
   </section>
 
-  <!-- FINAL (confirmación) -->
+  <!-- FINAL (resultado motivador dinámico por perfil) -->
   <section class="screen" id="screen-final">
     <div class="final">
-      <div class="check">
+      <div class="check" id="finalCheck">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <h2 id="finalTitle">¡Listo, tenemos tus datos!</h2>
-      <p>Un ejecutivo de Casa Brockers te contactará dentro de las próximas horas en el horario que indicaste. Si prefieres, puedes escribirnos ahora mismo por WhatsApp.</p>
+      <div class="result-tag" id="finalTag" style="margin-bottom:10px"></div>
+      <h2 id="finalTitle">¡Listo!</h2>
+      <p id="finalMessage"></p>
       <a class="btn-whatsapp agenda-btn" id="waLink" href="#" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.9-.4-1.7-.9-2.5-1.7-.7-.7-1.2-1.5-1.6-2.3-.2-.3 0-.4.2-.6.2-.1.3-.3.5-.5.1-.2.2-.3.3-.5.1-.2 0-.4-.1-.5-.1-.1-.6-1.5-.9-2.1-.2-.5-.5-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.3 0 1.3 1 2.6 1.1 2.8.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
-        Escribir ahora por WhatsApp
+        Hablar ahora con un asesor
       </a>
       <a class="btn-whatsapp agenda-btn" href="https://casabrockers.cl" target="_blank" rel="noopener" style="background:#1f2937;border-color:#1f2937">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        Cerrar y finalizar evaluación
-      </a>
-      <p class="alt-link">Te contactaremos al número que dejaste.</p>
-    </div>
-  </section>
-
-  <!-- DUPLICATE (teléfono ya registrado) -->
-  <section class="screen" id="screen-duplicate">
-    <div class="final">
-      <div class="check" style="background:#FFF4E5;border-color:#D4A017">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:#A8800D"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      </div>
-      <h2>Ya tenemos una solicitud tuya</h2>
-      <p>Detectamos que este teléfono ya está registrado en nuestro sistema. Un ejecutivo de Casa Brockers te contactará pronto. Si tienes consultas urgentes, escríbenos por WhatsApp.</p>
-      <a class="btn-whatsapp agenda-btn" id="waLinkDup" href="#" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.9-.4-1.7-.9-2.5-1.7-.7-.7-1.2-1.5-1.6-2.3-.2-.3 0-.4.2-.6.2-.1.3-.3.5-.5.1-.2.2-.3.3-.5.1-.2 0-.4-.1-.5-.1-.1-.6-1.5-.9-2.1-.2-.5-.5-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.3 0 1.3 1 2.6 1.1 2.8.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
-        Escribir ahora por WhatsApp
-      </a>
-      <a class="btn-whatsapp agenda-btn" href="https://casabrockers.cl" target="_blank" rel="noopener" style="margin-top:8px;background:#1f2937;border-color:#1f2937">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         Cerrar y finalizar evaluación
       </a>
@@ -941,13 +889,13 @@
     </svg>`
   };
 
-  // ===== QUIZ DATA =====
+  // ===== QUIZ DATA — solo 4 preguntas clave de calificación =====
   const QUESTIONS = [
     {
       id: "edad",
       illustration: "edad",
       title: "¿En qué rango de edad estás?",
-      sub: "Esta información nos ayuda a personalizar las alternativas.",
+      sub: "Esto nos ayuda a personalizar tus alternativas.",
       options: [
         { label: "18 a 25 años", value: "18-25", score: 1 },
         { label: "26 a 40 años", value: "26-40", score: 2 },
@@ -959,26 +907,11 @@
       id: "dicom",
       illustration: "dicom",
       title: "¿Tienes DICOM actualmente?",
-      sub: "Cuéntanos si tienes deuda morosa informada.",
+      sub: "Si tienes deuda morosa informada, igual podemos orientarte.",
       options: [
         { label: "No, no estoy en DICOM", value: "no", score: 2 },
         { label: "Sí, estoy en DICOM", value: "si", score: 0 },
         { label: "No estoy segura/o", value: "duda", score: 1 }
-      ]
-    },
-    {
-      id: "dicom_monto",
-      illustration: "dicom_monto",
-      title: "¿Cuál es el monto aproximado de la deuda?",
-      sub: "Esta información nos ayuda a evaluar alternativas.",
-      conditional: (a) => a.dicom === "si" || a.dicom === "duda",
-      options: [
-        { label: "Entre $0 y $50.000", value: "0-50", score: 2 },
-        { label: "Entre $50.001 y $200.000", value: "50-200", score: 1 },
-        { label: "Entre $200.001 y $500.000", value: "200-500", score: 1 },
-        { label: "Entre $500.001 y $1.000.000", value: "500-1M", score: 0 },
-        { label: "Más de $1.000.000", value: "1M+", score: 0 },
-        { label: "No lo sé con exactitud", value: "duda", score: 1 }
       ]
     },
     {
@@ -994,62 +927,15 @@
       ]
     },
     {
-      id: "afp",
-      illustration: "afp",
-      title: "¿Tienes 12 cotizaciones continuas en tu AFP?",
-      sub: "Es uno de los requisitos para varios programas.",
-      options: [
-        { label: "Sí, tengo 12 cotizaciones continuas", value: "si", score: 2 },
-        { label: "No, me falta completar cotizaciones", value: "no", score: 0 },
-        { label: "No estoy segura/o", value: "duda", score: 1 },
-        { label: "Soy independiente y cotizo de otra forma", value: "indep", score: 1 }
-      ]
-    },
-    {
       id: "renta",
       illustration: "renta",
       title: "¿Tu renta líquida es igual o mayor a $550.000?",
-      sub: "Indícanos tu situación de ingresos actual.",
+      sub: "Última pregunta. Esto nos permite mostrarte alternativas reales.",
       options: [
         { label: "Sí, gano $550.000 o más", value: "si", score: 2 },
         { label: "No, gano menos de $550.000", value: "no", score: 0 },
         { label: "Puedo complementar renta con otra persona", value: "complementa", score: 2 },
         { label: "No estoy segura/o si mi renta sirve", value: "duda", score: 1 }
-      ]
-    },
-    {
-      id: "primera",
-      illustration: "primera",
-      title: "¿Esta sería tu primera vivienda?",
-      sub: "Existen beneficios especiales para primera vivienda.",
-      options: [
-        { label: "Sí, sería mi primera vivienda", value: "si", score: 2 },
-        { label: "No, ya tengo o tuve una propiedad", value: "no", score: 0 },
-        { label: "No estoy segura/o", value: "duda", score: 1 }
-      ]
-    },
-    {
-      id: "objetivo",
-      illustration: "objetivo",
-      title: "¿Qué estás buscando comprar?",
-      sub: "Esto nos ayuda a encontrar la opción correcta para ti.",
-      options: [
-        { label: "Casa", value: "casa", score: 1 },
-        { label: "Departamento", value: "depto", score: 1 },
-        { label: "Casa o depto, según presupuesto", value: "flexible", score: 1 },
-        { label: "Aún no sé, quiero orientación", value: "orientacion", score: 1 }
-      ]
-    },
-    {
-      id: "tiempo",
-      illustration: "tiempo",
-      title: "¿Cuándo te gustaría iniciar la compra?",
-      sub: "Última pregunta. ¡Ya casi listo!",
-      options: [
-        { label: "Lo antes posible", value: "ya", score: 2 },
-        { label: "En 1 a 3 meses", value: "1-3", score: 2 },
-        { label: "En 3 a 6 meses", value: "3-6", score: 1 },
-        { label: "Solo estoy averiguando", value: "averiguando", score: 1 }
       ]
     }
   ];
@@ -1060,10 +946,9 @@
     current: -1,
     answers: {},
     score: 0,
-    contact: {},
+    contact: {},      // se acumula con { nombre } y luego { telefono, ... } al enviar
     profile: null,
-    startTime: 0,  // timestamp en ms cuando el usuario comenzó el quiz (anti-bot)
-    formOrigen: "form_ejecutivo"  // 'form_ejecutivo' o 'form_oficina' según botón elegido en resultado
+    startTime: 0      // timestamp en ms cuando el usuario comenzó el quiz (anti-bot)
   };
 
   // ===== HELPERS =====
@@ -1194,88 +1079,35 @@
     }
   };
 
+  // ===== RESULT — calcula perfil y pasa directo a captura de nombre =====
+  // Ya no hay pantalla intermedia de "resultado": el perfil se muestra al final
+  // con copy motivador personalizado para que el cliente sienta valor.
   function showResult() {
-    const profile = classifyProfile();
-    state.profile = profile;
-    const r = RESULTS[profile];
-    document.getElementById("resultTag").textContent = r.tag;
-    document.getElementById("resultTitle").textContent = r.title;
-    document.getElementById("resultText").textContent = r.text;
-    document.getElementById("resultIllustration").innerHTML = ILL[r.ill] || "";
-
-    // Summary
-    const labels = {
-      dicom: "DICOM",
-      dicom_monto: "Monto deuda",
-      antiguedad: "Antigüedad laboral",
-      afp: "Cotizaciones AFP",
-      renta: "Renta mensual",
-      primera: "Primera vivienda",
-      objetivo: "Busca",
-      tiempo: "Plazo de compra"
-    };
-    const sum = document.getElementById("summaryList");
-    sum.innerHTML = "";
-    Object.keys(state.answers).forEach(qid => {
-      const q = QUESTIONS.find(x => x.id === qid);
-      const opt = q.options.find(o => o.value === state.answers[qid]);
-      const row = document.createElement("div");
-      row.className = "summary-item";
-      row.innerHTML = `<span>${labels[qid] || qid}</span><span>${opt.label}</span>`;
-      sum.appendChild(row);
-    });
-
-    showScreen("screen-result");
+    state.profile = classifyProfile();
     document.getElementById("progressWrap").classList.remove("show");
+    // Pasar directamente a la pregunta de nombre (sigue el flujo conversacional)
+    showScreen("screen-name");
+    setTimeout(() => {
+      const inp = document.getElementById("nombre");
+      if (inp) inp.focus();
+    }, 250);
   }
 
-  function goToForm(tipo) {
-    // tipo: 'ejecutivo' (default) o 'oficina'
-    const isOficina = tipo === "oficina";
-    state.formOrigen = isOficina ? "form_oficina" : "form_ejecutivo";
-
-    // Personalizar copy del header del formulario según el flujo
-    const titleEl = document.getElementById("formTitle");
-    const leadEl = document.getElementById("formLead");
-    if (titleEl) titleEl.textContent = "Déjanos tus datos";
-    if (leadEl) {
-      leadEl.textContent = isOficina
-        ? "Un ejecutivo de Casa Brockers te contactará para darte la dirección y agendar una cita para que puedas visitarnos."
-        : "Un ejecutivo de Casa Brockers te contactará para orientarte sin compromiso.";
-    }
-
-    // Mostrar / ocultar el campo de período de visita
-    const visitaField = document.getElementById("visitaField");
-    const visitaSel = document.getElementById("visita");
-    if (visitaField && visitaSel) {
-      if (isOficina) {
-        visitaField.style.display = "";
-        visitaSel.required = true;
-      } else {
-        visitaField.style.display = "none";
-        visitaSel.required = false;
-        visitaSel.value = "";
-      }
-    }
-
-    showScreen("screen-form");
-  }
-
-  // ===== ANTI-DUPLICADO =====
-  // Pregunta al webhook (GET) si este teléfono ya está registrado en la Sheet.
-  // Devuelve true si es duplicado, false si no, o false ante error (no bloquear envío por falla de red).
-  async function checkDuplicatePhone(telefono) {
-    if (!CONFIG.webhookUrl) return false;
-    try {
-      const url = CONFIG.webhookUrl + "?check=" + encodeURIComponent(telefono);
-      const res = await fetch(url, { method: "GET" });
-      if (!res.ok) return false;
-      const data = await res.json();
-      return !!(data && data.exists);
-    } catch (e) {
-      console.warn("Check duplicate error:", e);
-      return false;
-    }
+  // ===== CAPTURA DE NOMBRE → pasa a captura de teléfono =====
+  function submitName(ev) {
+    ev.preventDefault();
+    const nombre = (document.getElementById("nombre").value || "").trim();
+    if (!nombre) return;
+    state.contact.nombre = nombre;
+    const firstName = nombre.split(" ")[0];
+    // Personalizar el header de la pantalla de teléfono con el nombre
+    document.getElementById("phoneTitle").textContent = `${firstName}, ¿a qué número te contactamos?`;
+    document.getElementById("phoneLead").textContent = `Un asesor de Casa Brockers te escribirá por WhatsApp con tus alternativas reales.`;
+    showScreen("screen-phone");
+    setTimeout(() => {
+      const inp = document.getElementById("telefono");
+      if (inp) inp.focus();
+    }, 250);
   }
 
   // Normaliza el teléfono a formato comparable: +56912345678
@@ -1333,93 +1165,90 @@
     }
   }
 
-  // ===== FORM COMPLETO (camino agenda) =====
-  async function submitForm(ev) {
+  // ===== COPY MOTIVADOR (NEUROMARKETING) PARA PANTALLA FINAL =====
+  // El cliente NUNCA debe sentir que llenó en vano. Cada perfil tiene un mensaje
+  // que valida su esfuerzo y le da una razón concreta para esperar al ejecutivo.
+  const FINAL_COPY = {
+    alto: {
+      tag: "🎉 ¡Excelente perfil!",
+      title: name => `¡Felicitaciones, ${name}!`,
+      message: "Tu perfil tiene una excelente base para postular. Un asesor de Casa Brockers revisará tu caso personalmente para mostrarte las alternativas concretas que puedes tomar ahora: subsidio, leasing habitacional o financiamiento directo. Espéralo en tu WhatsApp dentro de las próximas horas."
+    },
+    medio: {
+      tag: "👍 ¡Tu perfil tiene potencial!",
+      title: name => `¡Gracias, ${name}!`,
+      message: "Tu perfil tiene una buena base. Un asesor de Casa Brockers revisará tus respuestas y te contactará por WhatsApp para orientarte de forma personalizada sobre qué alternativa se ajusta mejor a tu situación. No tienes que esperar mucho."
+    },
+    bajo: {
+      tag: "💡 Te tenemos buenas noticias",
+      title: name => `Hola ${name}, gracias por confiar`,
+      message: "Hay puntos por revisar contigo personalmente, pero no te preocupes: muchos de nuestros clientes empezaron en una situación similar. Un asesor de Casa Brockers te contactará por WhatsApp para orientarte paso a paso, sin compromiso, sobre cómo fortalecer tu perfil para poder comprar tu primera vivienda."
+    }
+  };
+
+  // ===== ENVÍO FINAL DEL LEAD =====
+  async function submitLead(ev) {
     ev.preventDefault();
 
-    // 1) Honeypot: si el campo oculto está lleno, es un bot. Silenciosamente fingimos éxito.
+    // 1) Honeypot: si el campo oculto está lleno, es un bot
     const honeypot = document.getElementById("website");
     if (honeypot && honeypot.value && honeypot.value.length > 0) {
       console.warn("Honeypot disparado. Bot detectado.");
-      showScreen("screen-final"); // pantalla fake para no alertar al bot
+      mostrarFinal("medio", state.contact.nombre || "amigo/a"); // pantalla fake para no alertar
       return;
     }
 
-    // 2) Tiempo mínimo: si llenó el quiz + form en menos de 10 segundos, es bot
+    // 2) Tiempo mínimo (anti-bot por velocidad)
     const elapsedMs = Date.now() - (state.startTime || 0);
-    if (state.startTime && elapsedMs < 10000) {
+    if (state.startTime && elapsedMs < 8000) {
       console.warn("Tiempo demasiado rápido:", elapsedMs, "ms");
-      showScreen("screen-final"); // pantalla fake
+      mostrarFinal("medio", state.contact.nombre || "amigo/a"); // pantalla fake
       return;
     }
 
     const telefono = document.getElementById("telefono").value.trim();
 
-    // 3) Validación de patrones obvios de spam en el teléfono
+    // 3) Patrones obvios de spam en el teléfono
     if (isObviousSpamPhone(telefono)) {
       alert("El número de teléfono ingresado no es válido. Por favor revísalo.");
       return;
     }
 
     const data = {
-      origen: state.formOrigen || "form_ejecutivo",  // 'form_ejecutivo' o 'form_oficina'
-      nombre: document.getElementById("nombre").value.trim(),
+      origen: "landing_tiktok",
+      nombre: state.contact.nombre || "",
       telefono: telefono,
-      comuna: document.getElementById("comuna").value.trim(),
-      horario: document.getElementById("horario").value,
-      visita: (document.getElementById("visita") && document.getElementById("visita").value) || "",
       perfil: state.profile,
       score: state.score,
       respuestas: state.answers,
       fecha: new Date().toISOString(),
       tiempo_llenado_ms: elapsedMs
     };
-    state.contact = data;
+    state.contact = Object.assign({}, state.contact, data);
 
-    // Deshabilitar botón y mostrar animación con spinner
+    // Deshabilitar botón con spinner
     const btn = ev.target.querySelector("button[type=submit]");
     if (btn) {
       btn.disabled = true;
       btn.style.opacity = .85;
-      btn.innerHTML = '<span class="btn-spinner"></span> Verificando tus datos...';
+      btn.innerHTML = '<span class="btn-spinner"></span> Enviando...';
     }
 
-    // 4) Verificar si el teléfono ya está registrado ANTES de enviar
-    const isDuplicate = await checkDuplicatePhone(normalizePhone(telefono));
-    if (isDuplicate) {
-      // Mostrar pantalla de duplicado y NO enviar
-      const waMsgDup = `Hola Casa Brockers, soy ${data.nombre}. Mi teléfono ya estaba registrado pero quería conectarme con un ejecutivo.`;
-      document.getElementById("waLinkDup").href = buildWhatsappLink(waMsgDup);
-      showScreen("screen-duplicate");
-      if (btn) { btn.disabled = false; btn.style.opacity = 1; btn.innerHTML = "Enviar mis datos"; }
-      return;
-    }
-
-    // Cambiar texto a "Enviando..."
-    if (btn) btn.innerHTML = '<span class="btn-spinner"></span> Enviando...';
-
-    // 5) No es duplicado, enviar normalmente
+    // Enviar (sin chequeo de duplicado en el cliente; el backend se encarga)
     await sendLead(data);
 
-    const firstName = data.nombre.split(" ")[0];
-    document.getElementById("finalTitle").textContent = `¡Gracias, ${firstName}!`;
+    const firstName = (data.nombre || "").split(" ")[0] || "amigo/a";
+    mostrarFinal(state.profile, firstName);
+  }
 
-    const visitaLabels = {
-      asap: "lo antes posible",
-      esta_semana: "esta semana",
-      sabado: "este sábado",
-      proxima_semana: "la próxima semana",
-      flexible: "soy flexible, coordinemos"
-    };
-    let waMsg;
-    if (data.origen === "form_oficina") {
-      const visitaTxt = visitaLabels[data.visita] || "cuando me coordinen";
-      waMsg = `Hola Casa Brockers, soy ${data.nombre}. Acabo de hacer el test de primera vivienda (perfil: ${state.profile}) y quiero ir a la oficina para conocerlos. Me gustaría visitarlos ${visitaTxt}. Mi comuna es ${data.comuna}.`;
-    } else {
-      waMsg = `Hola Casa Brockers, soy ${data.nombre}. Acabo de hacer el test de primera vivienda (perfil: ${state.profile}). Mi comuna es ${data.comuna} y prefiero contacto en horario: ${data.horario}.`;
-    }
+  // ===== PINTAR PANTALLA FINAL con copy motivador =====
+  function mostrarFinal(perfil, firstName) {
+    const copy = FINAL_COPY[perfil] || FINAL_COPY.medio;
+    document.getElementById("finalTag").textContent = copy.tag;
+    document.getElementById("finalTitle").textContent = copy.title(firstName);
+    document.getElementById("finalMessage").textContent = copy.message;
+    const waMsg = `Hola Casa Brockers, soy ${state.contact.nombre || firstName}. Acabo de hacer el test de primera vivienda y me gustaría hablar con un asesor.`;
     document.getElementById("waLink").href = buildWhatsappLink(waMsg);
-
     showScreen("screen-final");
   }
 
