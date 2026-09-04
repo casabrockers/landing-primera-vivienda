@@ -1,0 +1,42 @@
+# Configuración del Static Site en Render.
+# Agrega headers HTTP de seguridad a todas las respuestas de la landing.
+#
+# X-Frame-Options DENY:
+#   Evita que otra web embeba la landing en un iframe (clickjacking).
+# X-Content-Type-Options nosniff:
+#   Impide que el navegador adivine el content-type y ejecute contenido no intencionado.
+# Referrer-Policy strict-origin-when-cross-origin:
+#   Limita qué información de la URL de origen se envía al navegar a sitios externos.
+# Permissions-Policy:
+#   Bloquea acceso a APIs sensibles (cámara, mic, geo, etc.) que la landing no necesita.
+# Strict-Transport-Security:
+#   Fuerza HTTPS en el navegador por 1 año, protege contra downgrade attacks.
+# Content-Security-Policy:
+#   Restringe qué se puede cargar/ejecutar en la página. Incluye 'unsafe-inline' porque
+#   la landing tiene CSS y JS inline; connect-src permite el webhook de Apps Script y
+#   wa.me (WhatsApp).
+services:
+  - type: web
+    name: landing-primera-vivienda
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: .
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+      - path: /*
+        name: Strict-Transport-Security
+        value: max-age=31536000; includeSubDomains
+      - path: /*
+        name: Content-Security-Policy
+        value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://wa.me https://api.whatsapp.com"
